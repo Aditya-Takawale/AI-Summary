@@ -4,6 +4,8 @@
 
 Transform your video lectures into searchable transcripts, insightful summaries, study quizzes, and videos with professional subtitles - all running **100% locally** with no API costs!
 
+**Created by [Aditya Takawale](https://github.com/Aditya-Takawale)**
+
 ---
 
 ## ✨ Features
@@ -234,5 +236,36 @@ Output: Video with subtitles + Word doc + JSON
 - RAM: 8GB+
 - Storage: 20GB+ SSD
 - GPU: NVIDIA with CUDA support (10x faster)
+
+---
+
+## 👨‍💻 Author
+
+**Aditya Takawale**
+- GitHub: [@Aditya-Takawale](https://github.com/Aditya-Takawale)
+- Repository: [AI-Summary](https://github.com/Aditya-Takawale/AI-Summary)
+
+## 📜 License
+
+MIT License - See [LICENSE](LICENSE) file for details
+
+Copyright © 2025 Aditya Takawale
+
+## 🙏 Acknowledgments
+
+Built with:
+- [OpenAI Whisper](https://github.com/openai/whisper) - Speech recognition
+- [Ollama](https://ollama.ai) - Local AI models
+- [MoviePy](https://zulko.github.io/moviepy/) - Video processing
+
+## 🌟 Support
+
+If you find this project helpful, please give it a ⭐️ on GitHub!
+
+**Report Issues:** [GitHub Issues](https://github.com/Aditya-Takawale/AI-Summary/issues)
+
+---
+
+**Built with ❤️ by Aditya Takawale | 100% Local, 100% Free, 100% Private**
 
 ---

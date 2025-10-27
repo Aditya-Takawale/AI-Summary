@@ -1,6 +1,9 @@
 """
 Embed Subtitles into Video
 Creates a new video file with embedded subtitle track that can be toggled on/off in any video player
+
+Author: Aditya Takawale
+GitHub: https://github.com/Aditya-Takawale/AI-Summary
 """
 
 import subprocess

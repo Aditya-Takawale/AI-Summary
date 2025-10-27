@@ -1,6 +1,10 @@
 """
 REST API Server for AI Video Assistant
 Allows any application to integrate via HTTP requests
+
+Author: Aditya Takawale
+GitHub: https://github.com/Aditya-Takawale/AI-Summary
+License: MIT
 """
 
 from flask import Flask, request, jsonify, send_file
