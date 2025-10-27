@@ -254,9 +254,22 @@ Copyright © 2025 Aditya Takawale
 ## 🙏 Acknowledgments
 
 Built with:
-- [OpenAI Whisper](https://github.com/openai/whisper) - Speech recognition
-- [Ollama](https://ollama.ai) - Local AI models
-- [MoviePy](https://zulko.github.io/moviepy/) - Video processing
+- [OpenAI Whisper](https://github.com/openai/whisper) - Speech recognition (MIT License)
+- [Ollama](https://ollama.ai) - Local AI models (MIT License)
+- [MoviePy](https://zulko.github.io/moviepy/) - Video processing (MIT License)
+- [FFmpeg](https://ffmpeg.org/) - Media processing (LGPL)
+
+This project is an independent integration of these tools and is not affiliated with or endorsed by OpenAI, Ollama, or any of the above projects.
+
+## ⚖️ Disclaimer
+
+This software is provided "as is" for educational and personal use. Users are responsible for:
+- Complying with copyright laws when processing videos
+- Respecting terms of service of video platforms
+- Using this tool ethically and legally
+- Not redistributing copyrighted content without permission
+
+The author is not responsible for misuse of this software.
 
 ## 🌟 Support
 
