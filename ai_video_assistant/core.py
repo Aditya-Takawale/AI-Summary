@@ -5,18 +5,14 @@ Simple, clean interface for developers
 
 from pathlib import Path
 from typing import Dict, Optional
-import sys
-import os
-
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-from audio_extractor import AudioExtractor
-from transcriber import AudioTranscriber
-from content_analyzer_ollama import OllamaContentAnalyzer
-from word_generator import generate_word_document
-from subtitle_generator import generate_srt
 import subprocess
+
+# Use relative imports for package modules
+from .audio_extractor import AudioExtractor
+from .transcriber import AudioTranscriber
+from .analyzer import OllamaContentAnalyzer
+from .word_generator import generate_word_document
+from .subtitle_generator import generate_srt
 
 
 class VideoAssistant:

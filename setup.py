@@ -10,7 +10,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="ai-video-assistant",
-    version="1.0.0",
+    version="1.0.4",
     author="Aditya Takawale",
     author_email="adityatakawale@example.com",  # Update with your real email
     description="AI-powered video lecture transcription, analysis, and subtitle generation",

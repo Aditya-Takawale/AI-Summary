@@ -7,7 +7,7 @@ import os
 import whisper
 import logging
 from pathlib import Path
-from ffmpeg_utils import setup_ffmpeg
+from .ffmpeg_utils import setup_ffmpeg
 
 # Check for CUDA GPU support at module load time
 try:
