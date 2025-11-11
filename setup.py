@@ -10,7 +10,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="ai-video-assistant",
-    version="1.0.4",
+    version="1.0.5",
     author="Aditya Takawale",
     author_email="adityatakawale@example.com",  # Update with your real email
     description="AI-powered video lecture transcription, analysis, and subtitle generation",
@@ -30,6 +30,11 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Operating System :: OS Independent",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS",
     ],
     python_requires=">=3.9",
     install_requires=[

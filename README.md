@@ -24,12 +24,81 @@ Transform your video lectures into searchable transcripts, insightful summaries,
 ### Prerequisites
 
 1. **Python 3.9+** installed
-2. **Ollama** installed and running ([Download here](https://ollama.ai))
-3. **FFmpeg** installed (usually auto-handled)
+2. **FFmpeg** installed (see platform-specific instructions below)
+3. **Ollama** installed and running ([Download here](https://ollama.ai))
 
+### Platform-Specific Setup
+
+<details>
+<summary><b>🪟 Windows Setup</b></summary>
+
+```powershell
+# 1. Install FFmpeg (choose one method)
+# Method A: Using Chocolatey (recommended)
+choco install ffmpeg
+
+# Method B: Using Scoop
+scoop install ffmpeg
+
+# Method C: Manual download from https://ffmpeg.org/download.html
+
+# 2. Verify FFmpeg installation
+ffmpeg -version
+
+# 3. Install Ollama from https://ollama.ai
+# 4. Continue with "Installation" steps below
+```
+</details>
+
+<details>
+<summary><b>🍎 macOS Setup</b></summary>
+
+```bash
+# 1. Install Homebrew (if not installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. Install FFmpeg
+brew install ffmpeg
+
+# 3. Install Ollama
+brew install ollama
+
+# 4. Verify installations
+ffmpeg -version
+ollama --version
+
+# 5. Continue with "Installation" steps below
+```
+</details>
+
+<details>
+<summary><b>🐧 Linux Setup</b></summary>
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install ffmpeg
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Fedora/RHEL
+sudo dnf install ffmpeg
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Arch Linux
+sudo pacman -S ffmpeg
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Verify installations
+ffmpeg -version
+ollama --version
+
+# Continue with "Installation" steps below
+```
+</details>
 
 ### Installation
 
+**Windows:**
 ```powershell
 # 1. Clone/download this repository
 cd c:\Developer\ai-summary
@@ -39,6 +108,27 @@ python -m venv .venv
 
 # 3. Activate virtual environment
 .venv\Scripts\activate
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. Start Ollama (in a separate terminal)
+ollama serve
+
+# 6. Pull the AI model
+ollama pull llama3.1
+```
+
+**macOS/Linux:**
+```bash
+# 1. Clone/download this repository
+cd ~/ai-summary
+
+# 2. Create virtual environment
+python3 -m venv .venv
+
+# 3. Activate virtual environment
+source .venv/bin/activate
 
 # 4. Install dependencies
 pip install -r requirements.txt
@@ -227,7 +317,7 @@ Output: Video with subtitles + Word doc + JSON
 ## 📋 System Requirements
 
 **Minimum:**
-- OS: Windows 10/11, macOS, Linux
+- OS: Windows 10/11, macOS 10.15+, Linux (Ubuntu 18.04+, Fedora 30+, Arch)
 - RAM: 4GB
 - Storage: 8GB (models + videos)
 - CPU: Any modern processor
@@ -235,7 +325,101 @@ Output: Video with subtitles + Word doc + JSON
 **Recommended:**
 - RAM: 8GB+
 - Storage: 20GB+ SSD
-- GPU: NVIDIA with CUDA support (10x faster)
+- GPU: NVIDIA with CUDA support (10x faster on Windows/Linux)
+- GPU: Apple Silicon M1/M2/M3 (Metal acceleration on macOS)
+
+---
+
+## 🐛 Troubleshooting
+
+### FFmpeg Not Found
+
+**Error:** `[Errno 2] No such file or directory: 'ffmpeg'`
+
+**Solution:**
+```bash
+# macOS
+brew install ffmpeg
+
+# Ubuntu/Debian
+sudo apt install ffmpeg
+
+# Windows (Chocolatey)
+choco install ffmpeg
+
+# Verify installation
+ffmpeg -version
+```
+
+### SSL Certificate Error (macOS)
+
+**Error:** `ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED]`
+
+**Solution:**
+```bash
+# Run the Install Certificates command
+/Applications/Python\ 3.12/Install\ Certificates.command
+
+# OR use Homebrew Python (includes certificates)
+brew install python@3.12
+```
+
+### Ollama Connection Error
+
+**Error:** `Connection refused to localhost:11434`
+
+**Solution:**
+```bash
+# Start Ollama server
+ollama serve
+
+# In another terminal, verify model is installed
+ollama list
+ollama pull llama3.1
+```
+
+### Out of Memory Error
+
+**Error:** `RuntimeError: CUDA out of memory`
+
+**Solution:**
+```python
+# Use a smaller Whisper model
+python embed_subtitles.py video.mp4 -m tiny  # or -m base
+
+# Process shorter videos
+# Consider splitting long videos into segments
+```
+
+### Import Errors
+
+**Error:** `ModuleNotFoundError: No module named 'ai_video_assistant'`
+
+**Solution:**
+```bash
+# Make sure virtual environment is activated
+# Windows
+.venv\Scripts\activate
+
+# macOS/Linux
+source .venv/bin/activate
+
+# Reinstall package
+pip install -r requirements.txt
+```
+
+### Permission Errors (Linux/macOS)
+
+**Error:** `PermissionError: [Errno 13]`
+
+**Solution:**
+```bash
+# Make sure you have write permissions
+chmod +w ./outputs
+chmod +w ./temp_audio
+
+# Don't run with sudo unless necessary
+```
 
 ---
 

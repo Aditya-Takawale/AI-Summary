@@ -12,7 +12,7 @@ from .transcriber import AudioTranscriber
 from .analyzer import OllamaContentAnalyzer
 from .subtitle_generator import generate_srt
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 __author__ = "Aditya Takawale"
 __license__ = "MIT"
 __all__ = ["VideoAssistant", "AudioTranscriber", "OllamaContentAnalyzer", "generate_srt"]
