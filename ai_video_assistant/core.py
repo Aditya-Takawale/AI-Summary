@@ -29,7 +29,8 @@ class VideoAssistant:
         self,
         whisper_model: str = "base",
         ollama_model: str = "llama3.1",
-        output_dir: str = "outputs"
+        output_dir: str = "outputs",
+        ollama_timeout: int = 600
     ):
         """
         Initialize the video assistant.
@@ -38,6 +39,7 @@ class VideoAssistant:
             whisper_model: Whisper model size (tiny/base/small/medium/large)
             ollama_model: Ollama model name (default: llama3.1)
             output_dir: Directory for output files
+            ollama_timeout: Timeout for Ollama requests in seconds (default: 600 = 10 min)
         """
         self.whisper_model = whisper_model
         self.ollama_model = ollama_model
@@ -47,7 +49,7 @@ class VideoAssistant:
         # Initialize components
         self.audio_extractor = AudioExtractor()
         self.transcriber = AudioTranscriber(model_size=whisper_model)
-        self.analyzer = OllamaContentAnalyzer(model=ollama_model)
+        self.analyzer = OllamaContentAnalyzer(model=ollama_model, timeout=ollama_timeout)
     
     def process_video(
         self,

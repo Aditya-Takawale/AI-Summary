@@ -33,18 +33,20 @@ Quiz Structure: Each question must have:
 
 Relevance: All summaries, insights, and questions must be 100% derived from the provided transcription. Do not introduce external information."""
     
-    def __init__(self, model: str = "llama3.1", base_url: str = "http://localhost:11434"):
+    def __init__(self, model: str = "llama3.1", base_url: str = "http://localhost:11434", timeout: int = 600):
         """
         Initialize the OllamaContentAnalyzer.
         
         Args:
             model: Ollama model name (e.g., 'llama3.1', 'mistral', 'llama2')
             base_url: Ollama API base URL
+            timeout: Request timeout in seconds (default: 600 = 10 minutes)
         """
         self.model = model
         self.base_url = base_url
         self.api_url = f"{base_url}/api/generate"
-        logger.info(f"OllamaContentAnalyzer initialized with model: {model}")
+        self.timeout = timeout
+        logger.info(f"OllamaContentAnalyzer initialized with model: {model}, timeout: {timeout}s")
     
     def _create_user_prompt(self, transcription: str) -> str:
         """
@@ -100,12 +102,13 @@ Provide your response as a single, valid JSON object using this exact schema:
 
 IMPORTANT: Return ONLY the JSON object, nothing else."""
     
-    def _call_ollama(self, prompt: str) -> str:
+    def _call_ollama(self, prompt: str, retry_count: int = 0) -> str:
         """
-        Call Ollama API to generate content.
+        Call Ollama API to generate content with retry logic.
         
         Args:
             prompt: The complete prompt
+            retry_count: Current retry attempt (for internal use)
         
         Returns:
             Generated text response
@@ -119,13 +122,17 @@ IMPORTANT: Return ONLY the JSON object, nothing else."""
             "options": {
                 "temperature": 0.3,  # Lower temperature for more consistent output
                 "top_p": 0.9,
-                "num_predict": 4096  # Allow longer responses
+                "num_predict": 4096,  # Allow longer responses
+                "num_ctx": 8192  # Increased context window
             }
         }
         
         try:
-            logger.info(f"Calling Ollama API with model: {self.model}")
-            response = requests.post(self.api_url, json=payload, timeout=300)
+            logger.info(f"Calling Ollama API with model: {self.model} (timeout: {self.timeout}s)")
+            if retry_count > 0:
+                logger.info(f"Retry attempt {retry_count}/3")
+            
+            response = requests.post(self.api_url, json=payload, timeout=self.timeout)
             response.raise_for_status()
             
             result = response.json()
@@ -137,16 +144,30 @@ IMPORTANT: Return ONLY the JSON object, nothing else."""
                 "Start it with: ollama serve"
             )
         except requests.exceptions.Timeout:
-            raise Exception("Ollama request timed out. Try a smaller model or shorter transcription.")
+            # Retry up to 3 times with increasing timeout
+            if retry_count < 3:
+                logger.warning(f"Request timed out after {self.timeout}s. Retrying with extended timeout...")
+                self.timeout = int(self.timeout * 1.5)  # Increase timeout by 50%
+                return self._call_ollama(prompt, retry_count + 1)
+            else:
+                raise Exception(
+                    f"Ollama request timed out after {self.timeout}s. \n\n"
+                    "Suggestions:\n"
+                    "1. Try a smaller/faster model: ollama pull llama3.2 (or mistral, phi)\n"
+                    "2. Process shorter videos (split long videos into segments)\n"
+                    "3. Increase system resources (close other applications)\n"
+                    "4. Check Ollama is responding: curl http://localhost:11434/api/tags\n"
+                )
         except Exception as e:
             raise Exception(f"Ollama API error: {str(e)}")
     
-    def analyze(self, transcription: str) -> Dict:
+    def analyze(self, transcription: str, auto_chunk: bool = True) -> Dict:
         """
         Analyze a lecture transcription and generate learning aids.
         
         Args:
             transcription: The full text transcription of the lecture
+            auto_chunk: If True, automatically chunk long transcriptions (default: True)
         
         Returns:
             Dictionary containing:
@@ -161,7 +182,19 @@ IMPORTANT: Return ONLY the JSON object, nothing else."""
         if not transcription or len(transcription.strip()) < 50:
             raise ValueError("Transcription is too short or empty for meaningful analysis")
         
-        logger.info(f"Analyzing transcription ({len(transcription)} characters)...")
+        # Check if transcription is very long (>10,000 words ~40,000 chars)
+        word_count = len(transcription.split())
+        char_count = len(transcription)
+        
+        logger.info(f"Analyzing transcription ({char_count:,} characters, ~{word_count:,} words)...")
+        
+        # Warn if transcription is very long
+        if word_count > 10000 and auto_chunk:
+            logger.warning(f"Long transcription detected ({word_count:,} words)")
+            logger.warning("This may take 10+ minutes. Consider:")
+            logger.warning("  1. Processing shorter video segments")
+            logger.warning("  2. Using a faster model (llama3.2, mistral)")
+            logger.warning("  3. Waiting patiently - processing continues...")
         
         try:
             # Create the prompt
